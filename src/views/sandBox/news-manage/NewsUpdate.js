@@ -1,10 +1,11 @@
-import React, { useEffect, useState, useRef } from 'react'
-import { PageHeader, Steps, Button, Form, Input, Select, message,notification } from 'antd'
+import React, {useEffect, useState, useRef} from 'react'
+import {PageHeader, Steps, Button, Form, Input, Select, message, notification} from 'antd'
 import style from './News.module.css'
 import axios from 'axios'
 import NewsEditor from '../../../components/news-manage/NewsEditor';
-const { Step } = Steps;
-const { Option } = Select;
+
+const {Step} = Steps;
+const {Option} = Select;
 
 export default function NewsUpdate(props) {
     const [current, setCurrent] = useState(0)
@@ -13,7 +14,7 @@ export default function NewsUpdate(props) {
     const [formInfo, setformInfo] = useState({})
     const [content, setContent] = useState("")
 
-    const User = JSON.parse(localStorage.getItem("token"))
+    // const User = JSON.parse(localStorage.getItem("token"))
     const handleNext = () => {
         if (current === 0) {
             NewsForm.current.validateFields().then(res => {
@@ -37,8 +38,8 @@ export default function NewsUpdate(props) {
     }
 
     const layout = {
-        labelCol: { span: 4 },
-        wrapperCol: { span: 20 },
+        labelCol: {span: 4},
+        wrapperCol: {span: 20},
     }
 
     const NewsForm = useRef(null)
@@ -55,9 +56,9 @@ export default function NewsUpdate(props) {
         axios.get(`/news/${props.match.params.id}?_expand=category&_expand=role`).then(res => {
             // setnewsInfo(res.data)
 
-            // content , 
-            // formInfo 
-            let {title,categoryId,content} = res.data
+            // content ,
+            // formInfo
+            let {title, categoryId, content} = res.data
             NewsForm.current.setFieldsValue({
                 title,
                 categoryId
@@ -70,25 +71,17 @@ export default function NewsUpdate(props) {
 
     const handleSave = (auditState) => {
 
-        axios.post('/news', {
+        axios.patch(`/news/${props.match.params.id}`, {
             ...formInfo,
             "content": content,
-            "region": User.region?User.region:"全球",
-            "author": User.username,
-            "roleId": User.roleId,
             "auditState": auditState,
-            "publishState": 0,
-            "createTime": Date.now(),
-            "star": 0,
-            "view": 0,
-            // "publishTime": 0
         }).then(res=>{
             props.history.push(auditState===0?'/news-manage/draft':'/audit-manage/list')
 
             notification.info({
                 message: `通知`,
                 description:
-                  `您可以到${auditState===0?'草稿箱':'审核列表'}中查看您的新闻`,
+                    `您可以到${auditState===0?'草稿箱':'审核列表'}中查看您的新闻`,
                 placement:"bottomRight"
             });
         })
@@ -99,18 +92,18 @@ export default function NewsUpdate(props) {
             <PageHeader
                 className="site-page-header"
                 title="更新新闻"
-                onBack={()=>props.history.goBack()}
+                onBack={() => props.history.goBack()}
                 subTitle="This is a subtitle"
             />
 
             <Steps current={current}>
-                <Step title="基本信息" description="新闻标题，新闻分类" />
-                <Step title="新闻内容" description="新闻主体内容" />
-                <Step title="新闻提交" description="保存草稿或者提交审核" />
+                <Step title="基本信息" description="新闻标题，新闻分类"/>
+                <Step title="新闻内容" description="新闻主体内容"/>
+                <Step title="新闻提交" description="保存草稿或者提交审核"/>
             </Steps>
 
 
-            <div style={{ marginTop: "50px" }}>
+            <div style={{marginTop: "50px"}}>
                 <div className={current === 0 ? '' : style.active}>
 
                     <Form
@@ -121,15 +114,15 @@ export default function NewsUpdate(props) {
                         <Form.Item
                             label="新闻标题"
                             name="title"
-                            rules={[{ required: true, message: 'Please input your username!' }]}
+                            rules={[{required: true, message: 'Please input your username!'}]}
                         >
-                            <Input />
+                            <Input/>
                         </Form.Item>
 
                         <Form.Item
                             label="新闻分类"
                             name="categoryId"
-                            rules={[{ required: true, message: 'Please input your username!' }]}
+                            rules={[{required: true, message: 'Please input your username!'}]}
                         >
                             <Select>
                                 {
@@ -147,12 +140,12 @@ export default function NewsUpdate(props) {
                     <NewsEditor getContent={(value) => {
                         // console.log(value)
                         setContent(value)
-                    }} content={content}></NewsEditor>
+                    }} content={content}/>
                 </div>
-                <div className={current === 2 ? '' : style.active}></div>
+                <div className={current === 2 ? '' : style.active}/>
 
             </div>
-            <div style={{ marginTop: "50px" }}>
+            <div style={{marginTop: "50px"}}>
                 {
                     current === 2 && <span>
                         <Button type="primary" onClick={() => handleSave(0)}>保存草稿箱</Button>

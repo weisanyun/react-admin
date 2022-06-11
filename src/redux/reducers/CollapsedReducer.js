@@ -1,6 +1,15 @@
-export const CollApsedReducer = (prevState={
-    isCollapsed:true
-},action)=>{
+export const CollApsedReducer = (prevState = {
+    isCollapsed: false
+}, action) => {
+    // console.log(action)
+    let {type} = action
 
-    return prevState
+    switch (type) {
+        case "change_collapsed":
+            let newState = {...prevState}
+            newState.isCollapsed = !newState.isCollapsed
+            return newState
+        default:
+            return prevState
+    }
 }

@@ -26,7 +26,7 @@ export default function NewsPublish(props) {
             title: "操作",
             render: (item) => {
                 return <div>
-                    <Button>button</Button>
+                    {props.button(item.id)}
                 </div>
             }
         }
@@ -37,7 +37,7 @@ export default function NewsPublish(props) {
             <Table dataSource={props.dataSource} columns={columns}
                 pagination={{
                     pageSize: 5
-                }} 
+                }}
                 rowKey={item=>item.id}
                 />
         </div>
