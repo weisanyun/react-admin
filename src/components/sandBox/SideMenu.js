@@ -70,12 +70,14 @@ function SideMenu(props) {
         })
     }, [])
     const {role: {rights}} = JSON.parse(localStorage.getItem("token"))
+    // 当前用户的权限列表 是否包含 菜单列表，有则true显示，无返回false
     const checkPagePermission = (item) => {
         return item.pagepermisson && rights.includes(item.key)
     }
 
     const renderMenu = (menuList) => {
         return menuList.map(item => {
+            // 是否有子菜单
             if (item.children && checkPagePermission(item)) {
                 return <SubMenu key={item.key} icon={iconList[item.key]} title={item.title}>
                     {renderMenu(item.children)}
@@ -83,6 +85,7 @@ function SideMenu(props) {
             }
 
             return checkPagePermission(item) && <Menu.Item key={item.key} icon={item.icon} onClick={() => {
+                // 组件中，打印props，没有路由的内容，要使用withRouter传入路由对象，才能实现跳转
                 //  console.log(props)
                 props.history.push(item.key)
             }}>{item.title}</Menu.Item>
