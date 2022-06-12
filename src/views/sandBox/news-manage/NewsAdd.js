@@ -34,7 +34,7 @@ function NewsAdd(props) {
         if (content === "" || content.trim() === "<p></p>") {
             message.error("新闻内容不能为空")
         } else {
-            setCurrent(current + 1)
+            setCurrent(current - 1)
         }
     }
 
